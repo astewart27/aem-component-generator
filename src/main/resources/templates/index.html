@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="h-dvh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Component Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="flex min-h-full flex-col dark:bg-gray-900">
+    <section class="dark:bg-gray-900">
+        <form class="rounded-lg bg-white shadow-xl max-w-screen-lg flex flex-col items-center m-auto">
+            <div class="my-12 w-full max-w-2xl">
+                <div class="border-b border-gray-900/10 py-6">
+                    <h2 class="text-2xl font-semibold text-gray-900">AEM Component Generator</h2>
+                    <p class="mt-1 text-sm/6 text-gray-600">This tool is a custom AEM Component Generator designed to automate the creation of AEM components in a Cloud Service project. It generates the essential files for a component, including the HTML structure, dialog, Sling Model, JavaScript, and CSS files, based on predefined templates. The tool streamlines the process of component creation by reducing manual work and ensuring consistency across projects. It can be run via a simple Maven command or custom Java script, making it an efficient solution for rapidly generating reusable, structured AEM components in a development environment.</p>
+                </div>
+
+                <div class="border-b border-gray-900/10 py-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Application Information</h3>
+                    <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                            <label for="applicationId" class="block text-sm/6 font-medium text-gray-900">Application ID</label>
+                            <div class="mt-2">
+                                <input type="text" name="applicationId" id="applicationId" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="applicationTitle" class="block text-sm/6 font-medium text-gray-900">Application Title</label>
+                            <div class="mt-2">
+                                <input type="text" name="applicationTitle" id="applicationTitle" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-gray-900/10 py-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Component Information</h3>
+                    <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                            <label for="componentName" class="block text-sm/6 font-medium text-gray-900">Component Name</label>
+                            <div class="mt-2">
+                                <input type="text" name="componentName" id="componentName" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="componentTitle" class="block text-sm/6 font-medium text-gray-900">Component Title</label>
+                            <div class="mt-2">
+                                <input type="text" name="componentTitle" id="componentTitle" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="componentPath" class="block text-sm/6 font-medium text-gray-900">Component Path</label>
+                            <div class="mt-2">
+                                <input type="text" id="componentPath" name="componentPath" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                            <p class="mt-1 text-sm/6 text-gray-600">Defaults to /apps/{appId}/components</p>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="componentGroup" class="block text-sm/6 font-medium text-gray-900">Component Group</label>
+                            <div class="mt-2">
+                                <input type="text" id="componentGroup" name="componentGroup" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                            <p class="mt-1 text-sm/6 text-gray-600">Defaults to {appTitle} - Content</p>
+                        </div>
+                        <div class="sm:col-span-full">
+                            <label for="componentDescription" class="block text-sm/6 font-medium text-gray-900">Component Description</label>
+                            <div class="mt-2">
+                                <textarea name="componentDescription" id="componentDescription" rows="3" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-b border-gray-900/10 py-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Dialog Fields</h3>
+                    <div class="multifield-component mt-8 p-4 border-2 border-indigo-600 bg-indigo-50 rounded-md w-full max-w-md flex flex-col">
+                        <div class="multifield-items">
+                            <div class="multifield-item flex gap-x-4 justify-between border border-indigo-600 rounded-md bg-white p-4 mb-4">
+                                <div>
+                                    <div class="mb-2">
+                                        <label for="fieldTypeItem-[1]" class="block text-sm/6 font-medium text-gray-900">Field Type</label>
+                                        <div class="grid grid-cols-1">
+                                            <select class="col-start-1 row-start-1 mt-2 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="fieldTypeItem-[1]">
+                                                <option selected>Choose a resource type</option>
+                                                <option value="textfield">Textfield</option>
+                                                <option value="pathfield">Pathfield</option>
+                                                <option value="pathbrowser">Pathbrowser</option>
+                                                <option value="textarea">Textarea</option>
+                                                <option value="select">Select</option>
+                                                <option value="checkbox">Checkbox</option>
+                                                <option value="hidden">Hidden</option>
+                                            </select>
+                                            <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                                                <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <p class="mt-1 text-sm/6 text-gray-600">The sling:resourceType of the field.</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="fieldLabelItem-[1]" class="block text-sm/6 font-medium text-gray-900">Field Label</label>
+                                        <div class="mt-2">
+                                            <input type="text" name="fieldLabelItem-[1]" id="fieldLabelItem-[1]" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="fieldNameItem-[1]" class="block text-sm/6 font-medium text-gray-900">Field Name</label>
+                                        <div class="mt-2">
+                                            <input type="text" name="fieldNameItem-[1]" id="fieldNameItem-[1]" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                                        </div>
+                                        <p class="mt-1 text-sm/6 text-gray-600">The name of the node. Use camelCase syntax.</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <div class="group flex items-center">
+                                            <div class="grid size-4 grid-cols-1 mr-2">
+                                                <input id="isFieldRequiredItem-[1]" name="isFieldRequiredItem-[1]" type="checkbox" class="col-start-1 row-start-1 h-[16px] w-[16px] appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                                                <svg class="col-start-1 row-start-1 pointer-events-none size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                                                    <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <label for="isFieldRequiredItem-[1]" class="block text-sm/6 font-medium text-gray-900">Required?</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" class="delete-item cursor-pointer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 pointer-events-none">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="multifield-add-field" class="bg-white w-full max-w-[120px] !ml-auto flex items-center rounded-md border-2 border-indigo-600 text-indigo-600 px-3 py-2 text-sm font-semibold shadow-xs hover:bg-indigo-500 hover:text-white cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-1 pointer-events-none">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            <span class="pointer-events-none">Add field</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="border-b border-gray-900/10 py-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Additional Information</h3>
+                    <div class="mt-8">
+                        <div class="mb-2">
+                            <div class="group flex items-center">
+                                <div class="grid size-4 grid-cols-1 mr-2">
+                                    <input id="includeSlingModelFile" name="includeSlingModelFile" type="checkbox" class="col-start-1 row-start-1 h-[16px] w-[16px] appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                                    <svg class="col-start-1 row-start-1 pointer-events-none size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                                        <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <label for="includeSlingModelFile" class="block text-sm/6 font-medium text-gray-900">Include Sling Model?</label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="group flex items-center">
+                                <div class="grid size-4 grid-cols-1 mr-2">
+                                    <input id="includeCssFile" name="includeCssFile" type="checkbox" class="col-start-1 row-start-1 h-[16px] w-[16px] appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                                    <svg class="col-start-1 row-start-1 pointer-events-none size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                                        <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <label for="includeCssFile" class="block text-sm/6 font-medium text-gray-900">Include CSS file?</label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="group flex items-center">
+                                <div class="grid size-4 grid-cols-1 mr-2">
+                                    <input id="includeJsFile" name="includeJsFile" type="checkbox" class="col-start-1 row-start-1 h-[16px] w-[16px] appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                                    <svg class="col-start-1 row-start-1 pointer-events-none size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                                        <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <label for="includeJsFile" class="block text-sm/6 font-medium text-gray-900">Include JS file?</label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="javascriptFlavor" class="block text-sm/6 font-medium text-gray-900">JavaScript Flavor</label>
+                            <div class="grid grid-cols-1 w-full max-w-3xs">
+                                <select class="col-start-1 row-start-1 mt-2 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="javascriptFlavor">
+                                    <option selected>Choose a flavor</option>
+                                    <option value="vanilla">Vanilla</option>
+                                    <option value="react">React</option>
+                                </select>
+                                <svg class="pointer-events-none col-start-1 row-start-1 mr-2 mt-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                                    <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-6 flex items-center justify-end gap-x-6 w-full max-w-2xl">
+                <button type="button" class="text-sm font-semibold text-gray-900 border border-gray-900/10 px-3 py-2 rounded-md cursor-pointer">Reset</button>
+                <button id="generate-component-btn" type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Generate Component</button>
+            </div>
+        </form>
+    </section>
+    <!-- Include JS -->
+    <script type="application/javascript" src="/script.js"></script>
+</body>
+</html>

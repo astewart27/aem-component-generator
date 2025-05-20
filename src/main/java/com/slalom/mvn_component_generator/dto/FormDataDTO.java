@@ -2,6 +2,8 @@ package com.slalom.mvn_component_generator.dto;
 
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class FormDataDTO {
 
@@ -16,4 +18,5 @@ public class FormDataDTO {
     private boolean includeCssFile;
     private boolean includeJsFile;
     private String javascriptFlavor;
+    private String dialogValues;
 }

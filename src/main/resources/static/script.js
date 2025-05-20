@@ -41,21 +41,46 @@
         }
     };
 
-    const handleGenerateComponent = async (event) => {
-        event.preventDefault();
+    const handleFormData = (componentForm) => {
+        const formData = new FormData(componentForm);
+        const updatedFormData = new FormData();
 
-        const formData = new FormData(form);
-        const dialogValuesMap = {};
-
+        const dialogValues = [];
         for (const [key, value] of formData.entries()) {
-            const match = key.match(/(fieldLabelItem|fieldNameItem)-\[(\d+)]/);
+            const match = key.match(/(fieldLabelItem|fieldNameItem|fieldTypeItem|isFieldRequiredItem)-\[(\d+)]/);
             if (match) {
+                const dialogValuesMap = {};
                 const [, type, index] = match;
                 dialogValuesMap[index] = dialogValuesMap[index] || {};
-                dialogValuesMap[index][type === "fieldLabelItem" ? "fieldLabel" : "fieldName"] = value;
+                switch (type) {
+                    case 'fieldLabelItem':
+                        dialogValuesMap[index]['fieldLabel'] = value;
+                        break;
+                    case 'fieldNameItem':
+                        dialogValuesMap[index]['fieldName'] = value;
+                        break;
+                    case 'fieldTypeItem':
+                        dialogValuesMap[index]['fieldType'] = value;
+                        break;
+                    case 'isFieldRequiredItem':
+                        dialogValuesMap[index]['isFieldRequired'] = value;
+                        break;
+                    default:
+                        break;
+                }
+                dialogValues.push(dialogValuesMap);
+            } else {
+                updatedFormData.append(key, value);
             }
-            console.log(`Key ${key} :: Value ${value}`);
         }
+        updatedFormData.append('dialogValues', JSON.stringify(dialogValues));
+        return updatedFormData;
+    };
+
+    const handleFormSubmission = async (event) => {
+        event.preventDefault();
+
+        const formData = handleFormData(form);
 
         try {
             const response = await fetch("/api/generator/form-data", {
@@ -78,5 +103,5 @@
     // Event Listeners
     addMultifieldItemBtn?.addEventListener('click', handleAddMultifieldItem);
     deleteMultifieldItemBtn?.addEventListener('click', handleDeleteMultifieldItem);
-    generateComponentBtn?.addEventListener('click', handleGenerateComponent);
+    generateComponentBtn?.addEventListener('click', handleFormSubmission);
 })();

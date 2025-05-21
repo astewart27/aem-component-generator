@@ -27,7 +27,6 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      */
     @Override
     public byte[] createZipWithFolderStructure(FormDataDTO data) {
-        logger.info("In createZipWithFolderStructure");
         try {
             Gson gson = new Gson();
             List<DialogValueDTO> dialogValues = gson.fromJson(
@@ -35,15 +34,11 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
                     new TypeToken<List<DialogValueDTO>>() {}.getType()
             );
 
-            logger.info("Dialog Values: {}", dialogValues);
-
             // Extract appId from form data
             String appId = extractAppId(data);
             if (appId == null || appId.isEmpty()) {
                 appId = "myapp";
             }
-
-            logger.info("App Id: {}", appId);
 
             // Extract componentName from form data
             String componentName = extractComponentName(data);
@@ -51,37 +46,23 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
                 componentName = "mycomponent";
             }
 
-            logger.info("Component Name: {}", componentName);
-
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
                  ZipOutputStream zipOutputStream = new ZipOutputStream(baos)) {
-
-                logger.info("In ByteArray/ZipOutput");
 
                 // Create the required folder structure
                 String uiAppsPath = "root/ui.apps/src/main/content/jcr_root/apps/" + appId + "/components/";
 
                 // Add component-specific folder if componentName is provided
-                if (componentName != null && !componentName.isEmpty()) {
-                    uiAppsPath += componentName + "/";
-                }
-
-                logger.info("Ui App Path: {}", uiAppsPath);
+                uiAppsPath += componentName + "/";
 
                 createDirectoryEntry(zipOutputStream, uiAppsPath);
-
-                logger.info("Created ui.apps directory entry");
 
                 // Create component files in ui.apps directory
                 createComponentFiles(zipOutputStream, uiAppsPath, data, dialogValues);
 
-                logger.info("Created component files");
-
                 // 2. core structure for models
                 String corePath = "root/core/src/main/java/core/models/";
                 createDirectoryEntry(zipOutputStream, corePath);
-
-                logger.info("Created core directory entry");
 
                 // Create Sling model if requested
                 if (data.isIncludeSlingModelFile()) {
@@ -93,9 +74,7 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
 
                 // 3. ui.frontend.general structure
                 String uiFrontendPath = "root/ui.frontend.general/src/main/webpack/components/";
-                if (componentName != null && !componentName.isEmpty()) {
-                    uiFrontendPath += componentName + "/";
-                }
+                uiFrontendPath += componentName + "/";
                 createDirectoryEntry(zipOutputStream, uiFrontendPath);
 
                 // Create CSS and JS files if requested
@@ -130,14 +109,12 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      * @throws IOException if an I/O error occurs
      */
     private void createDirectoryEntry(ZipOutputStream zipOutputStream, String directoryPath) throws IOException {
-        logger.info("In createDirectoryEntry");
         if (!directoryPath.endsWith("/")) {
             directoryPath += "/";
         }
         ZipEntry zipEntry = new ZipEntry(directoryPath);
         zipOutputStream.putNextEntry(zipEntry);
         zipOutputStream.closeEntry();
-        logger.info("Leaving createDirectoryEntry");
     }
 
     /**
@@ -166,7 +143,7 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      */
     private void createComponentFiles(ZipOutputStream zipOutputStream, String basePath,
                                       FormDataDTO data, List<DialogValueDTO> dialogValues) throws IOException {
-        logger.info("In createComponentFiles");
+
         // Create .content.xml file with component metadata
         String contentXml = createContentXml(data);
         createPlaceholderFile(zipOutputStream, basePath + ".content.xml", contentXml);
@@ -183,7 +160,6 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
         // Create HTL template file
         String htmlTemplate = createHtmlTemplate(data, dialogValues);
         createPlaceholderFile(zipOutputStream, basePath + data.getComponentName() + ".html", htmlTemplate);
-        logger.info("Leaving createComponentFiles");
     }
 
     /**

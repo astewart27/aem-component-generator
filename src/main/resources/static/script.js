@@ -45,35 +45,33 @@
         const formData = new FormData(componentForm);
         const updatedFormData = new FormData();
 
-        const dialogValues = [];
+        const dialogValuesMap = [];
         for (const [key, value] of formData.entries()) {
             const match = key.match(/(fieldLabelItem|fieldNameItem|fieldTypeItem|isFieldRequiredItem)-\[(\d+)]/);
             if (match) {
-                const dialogValuesMap = {};
                 const [, type, index] = match;
-                dialogValuesMap[index] = dialogValuesMap[index] || {};
+                dialogValuesMap[index - 1] = dialogValuesMap[index - 1] || {};
                 switch (type) {
                     case 'fieldLabelItem':
-                        dialogValuesMap[index]['fieldLabel'] = value;
+                        dialogValuesMap[index - 1]['fieldLabel'] = value;
                         break;
                     case 'fieldNameItem':
-                        dialogValuesMap[index]['fieldName'] = value;
+                        dialogValuesMap[index - 1]['fieldName'] = value;
                         break;
                     case 'fieldTypeItem':
-                        dialogValuesMap[index]['fieldType'] = value;
+                        dialogValuesMap[index - 1]['fieldType'] = value;
                         break;
                     case 'isFieldRequiredItem':
-                        dialogValuesMap[index]['isFieldRequired'] = value;
+                        dialogValuesMap[index - 1]['isFieldRequired'] = value === 'on';
                         break;
                     default:
                         break;
                 }
-                dialogValues.push(dialogValuesMap);
             } else {
                 updatedFormData.append(key, value);
             }
         }
-        updatedFormData.append('dialogValues', JSON.stringify(dialogValues));
+        updatedFormData.append('dialogValues', JSON.stringify(dialogValuesMap));
         return updatedFormData;
     };
 

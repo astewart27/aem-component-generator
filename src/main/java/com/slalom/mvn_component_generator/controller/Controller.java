@@ -35,16 +35,18 @@ public class Controller {
 
     @PostMapping( value = "/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> formData(@ModelAttribute FormDataDTO data) {
-        logger.info("Form submission");
+        logger.info("Form submission start");
         try {
             // Pass the files and form fields to the service
             byte[] zipBytes = componentGeneratorService.createZipWithFolderStructure(data);
+            logger.info("Created zip file");
 
             // Return the zip file as a response
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDispositionFormData("attachment", "aem-component.zip");
 
+            logger.info("Form submission end");
             return new ResponseEntity<>(zipBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(("Failed to parse dialogValues: " + e.getMessage()).getBytes());

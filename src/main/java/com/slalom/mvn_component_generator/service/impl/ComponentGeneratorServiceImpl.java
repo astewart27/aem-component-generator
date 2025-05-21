@@ -27,6 +27,7 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      */
     @Override
     public byte[] createZipWithFolderStructure(FormDataDTO data) {
+        logger.info("In createZipWithFolderStructure");
         try {
             Gson gson = new Gson();
             List<DialogValueDTO> dialogValues = gson.fromJson(
@@ -34,11 +35,15 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
                     new TypeToken<List<DialogValueDTO>>() {}.getType()
             );
 
+            logger.info("Dialog Values: {}", dialogValues);
+
             // Extract appId from form data
             String appId = extractAppId(data);
             if (appId == null || appId.isEmpty()) {
                 appId = "myapp";
             }
+
+            logger.info("App Id: {}", appId);
 
             // Extract componentName from form data
             String componentName = extractComponentName(data);
@@ -46,8 +51,12 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
                 componentName = "mycomponent";
             }
 
+            logger.info("Component Name: {}", componentName);
+
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
                  ZipOutputStream zipOutputStream = new ZipOutputStream(baos)) {
+
+                logger.info("In ByteArray/ZipOutput");
 
                 // Create the required folder structure
                 String uiAppsPath = "root/ui.apps/src/main/content/jcr_root/apps/" + appId + "/components/";
@@ -57,14 +66,22 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
                     uiAppsPath += componentName + "/";
                 }
 
+                logger.info("Ui App Path: {}", uiAppsPath);
+
                 createDirectoryEntry(zipOutputStream, uiAppsPath);
+
+                logger.info("Created ui.apps directory entry");
 
                 // Create component files in ui.apps directory
                 createComponentFiles(zipOutputStream, uiAppsPath, data, dialogValues);
 
+                logger.info("Created component files");
+
                 // 2. core structure for models
                 String corePath = "root/core/src/main/java/core/models/";
                 createDirectoryEntry(zipOutputStream, corePath);
+
+                logger.info("Created core directory entry");
 
                 // Create Sling model if requested
                 if (data.isIncludeSlingModelFile()) {
@@ -113,12 +130,14 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      * @throws IOException if an I/O error occurs
      */
     private void createDirectoryEntry(ZipOutputStream zipOutputStream, String directoryPath) throws IOException {
+        logger.info("In createDirectoryEntry");
         if (!directoryPath.endsWith("/")) {
             directoryPath += "/";
         }
         ZipEntry zipEntry = new ZipEntry(directoryPath);
         zipOutputStream.putNextEntry(zipEntry);
         zipOutputStream.closeEntry();
+        logger.info("Leaving createDirectoryEntry");
     }
 
     /**
@@ -147,6 +166,7 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      */
     private void createComponentFiles(ZipOutputStream zipOutputStream, String basePath,
                                       FormDataDTO data, List<DialogValueDTO> dialogValues) throws IOException {
+        logger.info("In createComponentFiles");
         // Create .content.xml file with component metadata
         String contentXml = createContentXml(data);
         createPlaceholderFile(zipOutputStream, basePath + ".content.xml", contentXml);
@@ -163,6 +183,7 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
         // Create HTL template file
         String htmlTemplate = createHtmlTemplate(data, dialogValues);
         createPlaceholderFile(zipOutputStream, basePath + data.getComponentName() + ".html", htmlTemplate);
+        logger.info("Leaving createComponentFiles");
     }
 
     /**
@@ -459,19 +480,12 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      * @return the corresponding Java type
      */
     private String mapFieldTypeToJavaType(String fieldType) {
-        switch (fieldType) {
-            case "textfield":
-            case "textarea":
-            case "pathfield":
-            case "select":
-                return "String";
-            case "checkbox":
-                return "boolean";
-            case "numberfield":
-                return "int";
-            default:
-                return "String";
-        }
+        // Updated switch to remove textfield, textarea, pathfield and select so that it defaults
+        return switch (fieldType) {
+            case "checkbox" -> "boolean";
+            case "numberfield" -> "int";
+            default -> "String";
+        };
     }
 
     /**
@@ -481,21 +495,14 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
      * @return the corresponding Granite UI component
      */
     private String mapFieldTypeToGraniteUI(String fieldType) {
-        switch (fieldType) {
-            case "textarea":
-                return "textarea";
-            case "checkbox":
-                return "checkbox";
-            case "numberfield":
-                return "numberfield";
-            case "pathfield":
-                return "pathfield";
-            case "select":
-                return "select";
-            case "textfield":
-            default:
-                return "textfield";
-        }
+        return switch (fieldType) {
+            case "textarea" -> "textarea";
+            case "checkbox" -> "checkbox";
+            case "numberfield" -> "numberfield";
+            case "pathfield" -> "pathfield";
+            case "select" -> "select";
+            default -> "textfield";
+        };
     }
 
     /**

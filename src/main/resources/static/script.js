@@ -90,9 +90,40 @@
                 console.log('Generate Component Error: ', response.status);
             }
 
-            console.log('Response is OK');
-            const json = await response.json();
-            console.log('Response: ', json);
+            // Get the filename from the Content-Disposition header if available
+            let filename = "aem-component.zip";
+            const contentDisposition = response.headers.get('Content-Disposition');
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1];
+                }
+            }
+
+            // Get the blob from the response
+            const blob = await response.blob();
+
+            // Create a temporary URL for the blob
+            const url = URL.createObjectURL(blob);
+
+            // Create an invisible download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = filename;
+            downloadLink.style.display = 'none';
+
+            // Append the link to the document, click it, and remove it
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+
+            // Clean up by revoking the object URL after a delay to ensure download starts
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                document.body.removeChild(downloadLink);
+            }, 100);
+
+            // Show success message
+            console.log('Component generated successfully!');
         } catch (error) {
             console.error(`Error in request to generate component: ${error.message}`);
         }

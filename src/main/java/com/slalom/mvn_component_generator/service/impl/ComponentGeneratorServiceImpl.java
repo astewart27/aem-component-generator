@@ -330,11 +330,11 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
 
         // Add data-sly-use if Sling Model is included
         if (data.isIncludeSlingModelFile()) {
-            html.append("<div class=\"").append(data.getComponentName()).append("\"\n");
+            html.append("<div class=\"cmp-").append(data.getComponentName().toLowerCase()).append("\"\n");
             html.append("     data-sly-use.model=\"");
             html.append("core.models.").append(capitalize(data.getComponentName())).append("Model\">\n");
         } else {
-            html.append("<div class=\"").append(data.getComponentName()).append("\">\n");
+            html.append("<div class=\"cmp-").append(data.getComponentName().toLowerCase()).append("\">\n");
         }
 
         // Add sample content based on dialog fields
@@ -342,13 +342,13 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
             for (DialogValueDTO field : dialogValues) {
                 if (data.isIncludeSlingModelFile()) {
                     // Use Sling Model property
-                    html.append("    <div class=\"").append(data.getComponentName()).append("__")
+                    html.append("    <div class=\"cmp-").append(data.getComponentName().toLowerCase()).append("__")
                             .append(field.getFieldName()).append("\">\n");
                     html.append("        <span>${model.").append(field.getFieldName()).append("}</span>\n");
                     html.append("    </div>\n");
                 } else {
                     // Use direct property access
-                    html.append("    <div class=\"").append(data.getComponentName()).append("__")
+                    html.append("    <div class=\"cmp-").append(data.getComponentName().toLowerCase()).append("__")
                             .append(field.getFieldName()).append("\">\n");
                     html.append("        <span data-sly-test=\"${properties.")
                             .append(field.getFieldName()).append("}\">${properties.")
@@ -383,7 +383,11 @@ public class ComponentGeneratorServiceImpl implements ComponentGeneratorService 
             xml.append("    jcr:description=\"").append(data.getComponentDescription()).append("\"\n");
         }
 
-        xml.append("    componentGroup=\"").append(data.getComponentGroup()).append("\"/>\n");
+        if (data.getComponentName() != null && !data.getComponentName().isEmpty()) {
+            xml.append("    componentGroup=\"").append(data.getComponentGroup()).append("\"/>\n");
+        } else {
+            xml.append("    componentGroup=\"").append(data.getApplicationTitle()).append(" - Content").append("\"/>\n");
+        }
 
         return xml.toString();
     }
